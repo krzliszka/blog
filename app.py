@@ -8,6 +8,8 @@ matplotlib.use('Agg')
 conn = sqlite3.connect('blog.db')
 c = conn.cursor()
 
+st.set_option('deprecation.showPyplotGlobalUse', False)
+
 def create_table():
     c.execute('CREATE TABLE IF NOT EXISTS blog_table('
               'author MESSAGE_TEXT,'
@@ -39,6 +41,10 @@ def get_blog_by_author(author):
     c.execute('SELECT * FROM blog_table WHERE author="{}"'.format(author))
     data = c.fetchall()
     return data
+
+def delete_data(title):
+    c.execute('DELETE FROM blog_table WHERE title = "{}"'.format(title))
+    conn.commit()
 
 # Layout templates
 title_temp = """
@@ -158,11 +164,36 @@ def main():
 
     elif choice == "Blog management":
 
-        st.subheader("Manage articles")
+        st.subheader("Posts:")
 
         result = view_all_posts()
         clean_db = pd.DataFrame(result, columns=["Author", "Title", "Posts", "Date"])
         st.dataframe(clean_db)
+
+        unique_titles = [i[0] for i in view_all_titles()]
+        delete_blog_by_title = st.selectbox("Unique title: ", unique_titles)
+
+        if st.button("Delete"):
+            delete_data(delete_blog_by_title)
+            st.warning("Deleted: '{}'".format(delete_blog_by_title))
+
+        if st.checkbox("metrics"):
+            new_df = clean_db
+            new_df['Length'] = new_df['Posts'].str.len()
+            st.dataframe(new_df)
+
+            st.subheader('Author statistics:')
+            new_df["Author"].value_counts().plot(kind='bar')
+            st.pyplot()
+            new_df["Author"].value_counts().plot.pie(autopct="%1.1f%%")
+            st.pyplot()
+
+        if st.checkbox("posts length"):
+            st.subheader("Length of posts: ")
+            new_df = clean_db
+            new_df['Length'] = new_df['Posts'].str.len()
+            barh_plot = new_df.plot.barh(x='Author', y='Length', figsize=(20,10))
+            st.pyplot()
 
 
 if __name__ == '__main__':
