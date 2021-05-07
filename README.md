@@ -1,5 +1,5 @@
 # Blog
-### Simple CRUD [blog website](https://share.streamlit.io/krzliszka/blog/app.py) built with Python, streamlit and basics of HTML and CSS. 
+### Simple CRUD [blog website](https://share.streamlit.io/krzliszka/blog/app.py) application built with Python, streamlit and basics of HTML and CSS. 
 ---
 ![Alt text](/1.png?raw=true )
 ### Main application will consist of 5 sections:
