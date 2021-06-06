@@ -9,5 +9,5 @@
 4. Search - section to search posts by title or author fields
 5. Blog management - section, where it is possible to delete post and check blog analytics
 
-## Back end
+## Back-end
 DB management is provided by SQL and sqlite3 package. For interacting with database, there have been created individual functions.
